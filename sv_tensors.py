@@ -1,5 +1,6 @@
 
 import cv2
+import json
 import math
 import matplotlib
 import matplotlib.image
@@ -14,34 +15,40 @@ from vtk.util.numpy_support import vtk_to_numpy
 #sv_data = os.path.join('/home', 'intern', 'sv_data')
 sv_data = os.path.join('F:', 'data', 'physics_based')
 
+folder_0006_0001 = os.path.join(sv_data, '0006_0001', '0006_0001')
 folder_0090_0001 = os.path.join(sv_data, '0090_0001', '0090_0001')
 folder_0091_0001 = os.path.join(sv_data, '0091_0001', '0091_0001')
 folder_0092_0001 = os.path.join(sv_data, '0092_0001', '0092_0001')
 folder_0093_0001 = os.path.join(sv_data, '0093_0001', '0093_0001')
 folder_0094_0001 = os.path.join(sv_data, '0094_0001', '0094_0001')
 folder_0095_0001 = os.path.join(sv_data, '0095_0001', '0095_0001')
+folder_0097_0001 = os.path.join(sv_data, '0097_0001', '0097_0001')
 folder_0140_2001 = os.path.join(sv_data, '0140_2001', '0140_2001')
 folder_0142_1001 = os.path.join(sv_data, '0142_1001', '0142_1001')
 folder_0149_1001 = os.path.join(sv_data, '0149_1001', '0149_1001')
 folder_0154_0001 = os.path.join(sv_data, '0154_0001', '0154_0001')
 
+models_0006_0001 = os.path.join(folder_0006_0001, 'Models')
 models_0090_0001 = os.path.join(folder_0090_0001, 'Models')
 models_0091_0001 = os.path.join(folder_0091_0001, 'Models')
 models_0092_0001 = os.path.join(folder_0092_0001, 'Models')
 models_0093_0001 = os.path.join(folder_0093_0001, 'Models')
 models_0094_0001 = os.path.join(folder_0094_0001, 'Models')
 models_0095_0001 = os.path.join(folder_0095_0001, 'Models')
+models_0097_0001 = os.path.join(folder_0097_0001, 'Models')
 models_0140_2001 = os.path.join(folder_0140_2001, 'Models')
 models_0142_1001 = os.path.join(folder_0142_1001, 'Models')
 models_0149_1001 = os.path.join(folder_0149_1001, 'Models')
 models_0154_0001 = os.path.join(folder_0154_0001, 'Models')
 
+simulations_0006_0001 = os.path.join(folder_0006_0001, 'Simulations', '0006_0001')
 simulations_0090_0001 = os.path.join(folder_0090_0001, 'Simulations', '0090_0001')
 simulations_0091_0001 = os.path.join(folder_0091_0001, 'Simulations', '0091_0001')
 simulations_0092_0001 = os.path.join(folder_0092_0001, 'Simulations', '0092_0001')
 simulations_0093_0001 = os.path.join(folder_0093_0001, 'Simulations', '0093_0001')
 simulations_0094_0001 = os.path.join(folder_0094_0001, 'Simulations', '0094_0001')
 simulations_0095_0001 = os.path.join(folder_0095_0001, 'Simulations', '0095_0001')
+simulations_0097_0001 = os.path.join(folder_0097_0001, 'Simulations', '0097_0001')
 simulations_0140_2001 = os.path.join(folder_0140_2001, 'Simulations', '0140_2001')
 simulations_0142_1001 = os.path.join(folder_0142_1001, 'Simulations', '0142_1001')
 simulations_0149_1001 = os.path.join(folder_0149_1001, 'Simulations', '0149_1001')
@@ -50,41 +57,61 @@ simulations_0154_0001 = os.path.join(folder_0154_0001, 'Simulations', '0154_0001
 extracted_data = os.path.join(sv_data, 'extracted_data')
 extracted_models = os.path.join(extracted_data, 'Models')
 extracted_masks = os.path.join(extracted_models, 'masks')
-extracted_tensors = os.path.join(extracted_models, 'tensor_masks')
+extracted_tensors = os.path.join(extracted_models, 'tensors_masks')
 extracted_simulations = os.path.join(extracted_data, 'Simulations')
 
+vtp_model_0006_0001 = os.path.join(models_0006_0001, '0006_0001.vtp')
 vtp_model_0090_0001 = os.path.join(models_0090_0001, '0090_0001.vtp')
 vtp_model_0091_0001 = os.path.join(models_0091_0001, '0091_0001.vtp')
 vtp_model_0092_0001 = os.path.join(models_0092_0001, '0092_0001.vtp')
 vtp_model_0093_0001 = os.path.join(models_0093_0001, '0093_0001.vtp')
 vtp_model_0094_0001 = os.path.join(models_0094_0001, '0094_0001.vtp')
 vtp_model_0095_0001 = os.path.join(models_0095_0001, '0095_0001.vtp')
+vtp_model_0097_0001 = os.path.join(models_0097_0001, '0097_0001.vtp')
 vtp_model_0140_2001 = os.path.join(models_0140_2001, '0140_2001.vtp')
 vtp_model_0142_1001 = os.path.join(models_0142_1001, '0142_1001.vtp')
 vtp_model_0149_1001 = os.path.join(models_0149_1001, '0149_1001.vtp')
 vtp_model_0154_0001 = os.path.join(models_0154_0001, '0154_0001.vtp')
 
+model_0006_0001_masks = os.path.join(extracted_masks, '0006_0001')
 model_0090_0001_masks = os.path.join(extracted_masks, '0090_0001')
 model_0091_0001_masks = os.path.join(extracted_masks, '0091_0001')
 model_0092_0001_masks = os.path.join(extracted_masks, '0092_0001')
 model_0093_0001_masks = os.path.join(extracted_masks, '0093_0001')
 model_0094_0001_masks = os.path.join(extracted_masks, '0094_0001')
 model_0095_0001_masks = os.path.join(extracted_masks, '0095_0001')
+model_0097_0001_masks = os.path.join(extracted_masks, '0097_0001')
 model_0140_2001_masks = os.path.join(extracted_masks, '0140_2001')
 model_0142_1001_masks = os.path.join(extracted_masks, '0142_1001')
 model_0149_1001_masks = os.path.join(extracted_masks, '0149_1001')
 model_0154_0001_masks = os.path.join(extracted_masks, '0154_0001')
 
+model_0006_0001_tensor = os.path.join(extracted_tensors, '0006_0001.pt')
 model_0090_0001_tensor = os.path.join(extracted_tensors, '0090_0001.pt')
 model_0091_0001_tensor = os.path.join(extracted_tensors, '0091_0001.pt')
 model_0092_0001_tensor = os.path.join(extracted_tensors, '0092_0001.pt')
 model_0093_0001_tensor = os.path.join(extracted_tensors, '0093_0001.pt')
 model_0094_0001_tensor = os.path.join(extracted_tensors, '0094_0001.pt')
 model_0095_0001_tensor = os.path.join(extracted_tensors, '0095_0001.pt')
+model_0097_0001_tensor = os.path.join(extracted_tensors, '0097_0001.pt')
 model_0140_2001_tensor = os.path.join(extracted_tensors, '0140_2001.pt')
 model_0142_1001_tensor = os.path.join(extracted_tensors, '0142_1001.pt')
 model_0149_1001_tensor = os.path.join(extracted_tensors, '0149_1001.pt')
 model_0154_0001_tensor = os.path.join(extracted_tensors, '0154_0001.pt')
+
+model_0006_0001_npy = os.path.join(extracted_tensors, '0006_0001', '0006_0001.npy')
+model_0090_0001_npy = os.path.join(extracted_tensors, '0090_0001', '0090_0001.npy')
+model_0091_0001_npy = os.path.join(extracted_tensors, '0091_0001', '0091_0001.npy')
+model_0092_0001_npy = os.path.join(extracted_tensors, '0092_0001', '0092_0001.npy')
+model_0093_0001_npy = os.path.join(extracted_tensors, '0093_0001', '0093_0001.npy')
+model_0094_0001_npy = os.path.join(extracted_tensors, '0094_0001', '0094_0001.npy')
+model_0095_0001_npy = os.path.join(extracted_tensors, '0095_0001', '0095_0001.npy')
+model_0097_0001_npy = os.path.join(extracted_tensors, '0097_0001', '0097_0001.npy')
+model_0140_2001_npy = os.path.join(extracted_tensors, '0140_2001', '0140_2001.npy')
+model_0142_1001_npy = os.path.join(extracted_tensors, '0142_1001', '0142_1001.npy')
+model_0149_1001_npy = os.path.join(extracted_tensors, '0149_1001', '0149_1001.npy')
+model_0154_0001_npy = os.path.join(extracted_tensors, '0154_0001', '0154_0001.npy')
+
 
 vtp_models = [vtp_model_0090_0001, vtp_model_0091_0001, vtp_model_0092_0001, vtp_model_0093_0001,
               vtp_model_0094_0001, vtp_model_0095_0001, vtp_model_0154_0001, vtp_model_0149_1001,
@@ -112,12 +139,18 @@ def clean_dir(dir_path):
 
 
 def save_masks(np_array, dir_path):
+    max_number_len = 3
+    if np_array.shape[0] >= 1000:
+        max_number_len = 4
     masks_count = 0
     os.makedirs(dir_path, exist_ok=True)
     if os.path.exists(dir_path) and os.path.isdir(dir_path) :
         clean_dir(dir_path)
         for i in range(0, np_array.shape[0]):
-            mask_path = os.path.join(dir_path, f'mask_{np_array.shape[0]-i-1}.png')
+            mask_number = str(np_array.shape[0]-i-1)
+            while len(mask_number) < max_number_len:
+                mask_number = "0" + mask_number
+            mask_path = os.path.join(dir_path, f'mask_{mask_number}.png')
             matplotlib.image.imsave(mask_path, np_array[i], cmap="gray")
             masks_count += 1
 
@@ -189,7 +222,6 @@ def vtp_to_pngs(vtp_path, pngs_path, spacing=0.05, inval=1, outval=0, cast_float
         print(f'np_array.min() : {np_array.min()}')
 
         masks_count = save_masks(np_array, pngs_path)
-        print(f'masks_count : {masks_count}')
 
     return masks_count
 
@@ -204,6 +236,7 @@ def get_np_tensor_from_pngs(png_masks_path):
                 if np_tensor is None:
                     np_tensor = np.empty((0, mask.shape[0], mask.shape[1]), dtype=np.uint8) # np.float32)
                 np_tensor = np.append(np_tensor, np.expand_dims(mask, axis=0), axis=0)
+
 
     return np_tensor
 
@@ -221,7 +254,7 @@ def create_tensors_from_pngs(pngs_path, dims=[128, 128, 128]):
 
     return tensors_paths
 
-
+"""
 def edit_png_masks(tensor_path):
     final_masks_count = 0
     if os.path.exists(tensor_path) and os.path.isdir(tensor_path):
@@ -237,7 +270,7 @@ def edit_png_masks(tensor_path):
                         contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     return final_masks_count
-
+"""
 
 def crop_to_square(tensor_path, cropped_dir=None):
     cropped_npy_path = None
@@ -369,7 +402,11 @@ def modify_cropped_npys(cropped_npys, size=128, old_prefix = 'cropped_', new_pre
         with open(cropped_npy_path, 'rb') as f:
             modified_npy = np.load(f)
 
-        if cropped_npy_number == '0090_0001':
+        if cropped_npy_number == '0006_0001':
+            top_crop = bottom_crop = 10
+            left_crop = 20
+            modified_npy = modified_npy[:, top_crop:modified_npy.shape[1]-bottom_crop-modified_npy.shape[1]//3, left_crop:modified_npy.shape[2]-modified_npy.shape[2]//3]
+        elif cropped_npy_number == '0090_0001':
             x_crop = y_crop = 38
             x_y_crop = 44
             modified_npy = modified_npy[:, modified_npy.shape[1]//6 : modified_npy.shape[1]-y_crop-modified_npy.shape[1]//6, x_crop+modified_npy.shape[2]//3:]
@@ -442,12 +479,16 @@ def make_pt_tensors_from_npys(npys, pt_dir=None):
     if len(npys) > 0:
         for npy in npys:
             dir_path, file_name = os.path.split(npy)
-            if pt_dir is not None:
+            if pt_dir is not None and os.path.exists(pt_dir) and os.path.isdir(pt_dir):
                 dir_path = pt_dir
             pt_name = file_name[len(prefix):-len(suffix)]
             pt_path = os.path.join(dir_path, f'{pt_name}.pt')
             with open(npy, 'rb') as f:
                 np_tensor = np.load(f)
+            print(f'np_tensor.shape : {np_tensor.shape}') # [z, y, x]
+            np_tensor = np.moveaxis(np_tensor, 0, -1) # [y, x, z]
+            np_tensor = np.moveaxis(np_tensor, 0, 1) # [x, y, z]
+            print(f'reshaped np_tensor.shape : {np_tensor.shape}')
             pt_tensor = torch.from_numpy(np_tensor)
             print(f'pt_path: {pt_path}')
             print(f'pt_tensor.size(): {pt_tensor.size()}')
@@ -457,14 +498,81 @@ def make_pt_tensors_from_npys(npys, pt_dir=None):
     return pt_tensors
 
 
-if __name__ == '__main__':
-    """
-    vtp_to_pngs(vtp_model_0090_0001, model_0090_0001_masks, spacing=0.025)
-    np_tensor = get_np_tensor_from_pngs('F:\\data\\physics_based\\extracted_data\\Models\\tensors_masks\\0090_0001\\png_masks')
+def save_np_tensor(np_tensor, npy_path):
+    npy_saved = False
+    if type(np_tensor) is np.ndarray and len(np_tensor.shape) == 3 and np_tensor.shape[0] > 0 and np_tensor.shape[1] > 0 and np_tensor.shape[2] > 0:
+        npy_dir, npy_name = os.path.split(npy_path)
+        if not (os.path.exists(npy_dir) and os.path.isdir(npy_dir)):
+            os.makedirs(npy_dir, exist_ok=True)
+        np.save(npy_path, np_tensor)
+        npy_saved = True
+    else:
+        print(f'type(np_tensor) : {type(np_tensor)}')
+        print(f'np_tensor.shape : {np_tensor.shape}')
+        print(f'len(np_tensor.shape) : {len(np_tensor.shape)}')
 
+    return npy_saved
+
+
+if __name__ == '__main__':
+
+    with open('bc.txt') as f:
+        data = f.read()
+
+    js = json.loads(data)
+
+    # Flow rates Q1-,Q2-,Q3-
+    Qm = js["0006_0001.pt"][0] # [0, 0, -1E-5]
+    print(f'Qm : {Qm}')
+
+    # Flow rates Q1+,Q2+,Q3+
+    Qp = js["0006_0001.pt"][1] # [0, 0, 1E-5]
+    print(f'Qp : {Qp}')
+
+
+    """
+    saved_masks_count = vtp_to_pngs(vtp_model_0006_0001, model_0006_0001_masks, spacing=0.05)
+    print(f'saved_masks_count : {saved_masks_count}')
+    
+    np_tensor = get_np_tensor_from_pngs('F:\\data\\physics_based\\extracted_data\\Models\\tensors_masks\\0006_0001\\reordered_pngs')
+    npy_saved = save_np_tensor(np_tensor, model_0006_0001_npy)
+    print(f'npy_saved : {npy_saved}')
+
+    cropped_npy_path = crop_to_square(model_0006_0001_npy, cropped_dir=None)
+    print(f'cropped_npy_path : {cropped_npy_path}')
+
+    with open(cropped_npy_path, 'rb') as f:
+        cropped_npy_0006_0001 = np.load(f)
+
+    path_, cropped_npy_name = os.path.split(cropped_npy_path)
+    cropped_pngs_dir = os.path.join(path_, 'cropped_pngs')
+    print(f'cropped_pngs_dir : {cropped_pngs_dir}')
+
+    saved_cropped_pngs = save_npy_to_pngs(cropped_npy_0006_0001, cropped_pngs_dir)
+    print(f'saved_cropped_pngs : {saved_cropped_pngs}')
+    """
+    """
+    cropped_npy = ['F:\\data\\physics_based\\extracted_data\\Models\\tensors_masks\\0006_0001\\cropped_0006_0001.npy']
+    modified_npys = modify_cropped_npys(cropped_npy)
+    print(f'modified_npys : {modified_npys}')
+    """
+
+    """
+    modified_npys = ['F:\\data\\physics_based\\extracted_data\\Models\\tensors_masks\\0006_0001\\modified_0006_0001.npy',
+                     'F:\\data\\physics_based\\extracted_data\\Models\\tensors_masks\\0093_0001\\modified_0093_0001.npy',
+                     'F:\\data\\physics_based\\extracted_data\\Models\\tensors_masks\\0140_2001\\modified_0140_2001.npy']
+
+    pt_tensors = make_pt_tensors_from_npys(modified_npys)
+    print(f'pt_tensors : {pt_tensors}')
+    """
+
+    """
+    tensors_dir = 'F:\\data\\physics_based\\extracted_data\\Models\\tensors_masks'
     reordered_dirs_paths = reorder_masks(tensors_dir, "reordered_pngs")
     print(f'reordered_dirs_paths: {reordered_dirs_paths}')
+    """
 
+    """
     np_tensors_paths = save_png_masks_as_np_tensors(tensors_dir)
     print(f'np_tensors_paths: {np_tensors_paths}')
     for tensor_path in np_tensors_paths:
@@ -473,8 +581,7 @@ if __name__ == '__main__':
         print(f'saved_pngs_count: {saved_pngs_count}')
     """
 
-    tensors_dir = 'F:\\data\\physics_based\\extracted_data\\Models\\tensors_masks'
-
+    """
     cropped_npys = get_cropped_npys(tensors_dir)
     print(f'cropped_npys : {cropped_npys}')
     modified_npys = modify_cropped_npys(cropped_npys)
@@ -482,3 +589,4 @@ if __name__ == '__main__':
 
     pt_tensors = make_pt_tensors_from_npys(modified_npys)
     print(f'pt_tensors : {pt_tensors}')
+    """
